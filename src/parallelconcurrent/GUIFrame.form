@@ -90,17 +90,17 @@
                           </Group>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="jSpinner2" max="32767" attributes="0"/>
-                              <Component id="jTextField3" max="32767" attributes="0"/>
-                              <Component id="jSpinner1" max="32767" attributes="0"/>
+                              <Component id="consumerSize" max="32767" attributes="0"/>
+                              <Component id="bufferSize" max="32767" attributes="0"/>
+                              <Component id="producerSize" max="32767" attributes="0"/>
                               <Component id="jLabel4" max="32767" attributes="0"/>
                               <Component id="jTextField4" min="-2" pref="86" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
                               <Component id="jLabel5" max="32767" attributes="0"/>
-                              <Component id="jTextField1" alignment="0" max="32767" attributes="0"/>
-                              <Component id="jTextField2" alignment="0" max="32767" attributes="0"/>
+                              <Component id="producerSleepTime" alignment="0" max="32767" attributes="0"/>
+                              <Component id="consumerSleepTime" alignment="0" max="32767" attributes="0"/>
                               <Component id="jSpinner3" min="-2" pref="109" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace pref="52" max="32767" attributes="0"/>
@@ -118,21 +118,21 @@
                           <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="1" attributes="0">
                               <Group type="103" alignment="1" groupAlignment="3" attributes="0">
-                                  <Component id="jSpinner1" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jTextField1" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="producerSize" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="producerSleepTime" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jSpinner2" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jTextField2" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="consumerSize" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="consumerSleepTime" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="1" attributes="0">
                               <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jTextField3" min="-2" max="-2" attributes="0"/>
+                              <Component id="bufferSize" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
@@ -151,11 +151,14 @@
                     <Property name="text" type="java.lang.String" value="Tiempo de Espera (ms)"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JTextField" name="jTextField1">
+                <Component class="javax.swing.JTextField" name="producerSleepTime">
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="producerSleepTimeActionPerformed"/>
+                  </Events>
                 </Component>
-                <Component class="javax.swing.JTextField" name="jTextField2">
+                <Component class="javax.swing.JTextField" name="consumerSleepTime">
                 </Component>
-                <Component class="javax.swing.JTextField" name="jTextField3">
+                <Component class="javax.swing.JTextField" name="bufferSize">
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel6">
                   <Properties>
@@ -176,9 +179,9 @@
                     <Property name="text" type="java.lang.String" value="Consumidores"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JSpinner" name="jSpinner1">
+                <Component class="javax.swing.JSpinner" name="producerSize">
                 </Component>
-                <Component class="javax.swing.JSpinner" name="jSpinner2">
+                <Component class="javax.swing.JSpinner" name="consumerSize">
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel3">
                   <Properties>
@@ -314,6 +317,9 @@
         </Property>
         <Property name="text" type="java.lang.String" value="INICIAR"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton1ActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>
