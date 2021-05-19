@@ -1,45 +1,46 @@
 
 package parallelconcurrent;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Buffer {
     
-    private char buffer;
+    private Queue<Character> buffer;
+    private int size;
     
-    Buffer() {
-        this.buffer = 0;
+    Buffer(int size) {
+        this.buffer = new LinkedList<>();
+        this.size = size;
     }
     
     synchronized char consume() {
-        char product = 0;
-        
-        if(this.buffer == 0) {
+        if(this.buffer.isEmpty()) {
             try {
-                wait(1000);
+                wait();
             } catch (InterruptedException ex) {
                 Logger.getLogger(Buffer.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        product = this.buffer;
-        this.buffer = 0;
-        notify();
+        char product = this.buffer.poll();
+        notifyAll();
         
         return product;
     }
     
     synchronized void produce(char product) {
-        if(this.buffer != 0) {
+        if(this.buffer.size() >= this.size) {
             try {
-                wait(1000);
+                wait();
             } catch (InterruptedException ex) {
                 Logger.getLogger(Buffer.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        this.buffer = product;
-        
-        notify();
+        this.buffer.add(product);
+        notifyAll();
     }
     
     static int count = 1;
