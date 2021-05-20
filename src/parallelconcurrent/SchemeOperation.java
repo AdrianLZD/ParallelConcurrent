@@ -5,6 +5,7 @@
  */
 package parallelconcurrent;
 
+import java.text.DecimalFormat;
 import java.util.Random;
 
 /**
@@ -16,6 +17,8 @@ public class SchemeOperation {
     double num1;
     double num2;
 
+    public static DecimalFormat df2=new DecimalFormat("#.##");
+    
     public SchemeOperation(double num1, double num2, char op) {//Define the operator to be used
         this.num1=num1;
         this.num2=num2;
@@ -31,8 +34,8 @@ public class SchemeOperation {
     }
     
     public String getOperation(){//Returns the operation in the current format
-        String n1= num1%1==0 ? String.valueOf((int)num1) : String.valueOf(num1);
-        String n2= num2%1==0 ? String.valueOf((int)num2) : String.valueOf(num2);
+        String n1= num1%1==0 ? String.valueOf((int)num1) : df2.format(num1);
+        String n2= num2%1==0 ? String.valueOf((int)num2) : df2.format(num2);
         return "("+this.op+" "+n1+" "+n2+")";
     }
     
@@ -60,12 +63,12 @@ public class SchemeOperation {
           throw new Error("The operator char used is not handled");
         }
         
-        return res%1==0 ? String.valueOf((int)res): String.valueOf(res);
+        return res%1==0 ? String.valueOf((int)res): df2.format(res);
     }
     
     private static String toFraction(double num1, double num2){//Gets the division in the smallest fraction
         if(num2==0) return "Exception in /";
-        if(num1%1!=0 || num2%1!=0) return String.valueOf((num1/num2));
+        if(num1%1!=0 || num2%1!=0) return df2.format((num1/num2));
         double denom=0;
         for(int i=0; i<(num1>num2?num1:num2);i++){
             if(num1%i==0 && num2%i==0){
