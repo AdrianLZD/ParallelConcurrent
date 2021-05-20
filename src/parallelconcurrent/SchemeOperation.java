@@ -30,13 +30,13 @@ public class SchemeOperation {
         this.op=ops[rand.nextInt(4)];
     }
     
-    public String getOperation(){
+    public String getOperation(){//Returns the operation in the current format
         String n1= num1%1==0 ? String.valueOf((int)num1) : String.valueOf(num1);
         String n2= num2%1==0 ? String.valueOf((int)num2) : String.valueOf(num2);
         return "("+this.op+" "+n1+" "+n2+")";
     }
     
-    public String solve(){
+    public String solve(){//Solves the operation based on the operator sign used
         
         double res=0;
         
@@ -55,25 +55,47 @@ public class SchemeOperation {
           break;
         case '/':
           // Divide
-          res=num1/num2;
-          break;
+          return this.toFraction(num1,num2);
         default:
-          throw new Error("The operator used is not handled");
+          throw new Error("The operator char used is not handled");
         }
         
-        if(Double.isInfinite(res)) return "Exception in /";
         return res%1==0 ? String.valueOf((int)res): String.valueOf(res);
     }
     
-    public static void main(String[] args) {
-        SchemeOperation so = new SchemeOperation(1,2);
+    private static String toFraction(double num1, double num2){//Gets the division in the smallest fraction
+        if(num2==0) return "Exception in /";
+        double denom=0;
+        for(int i=0; i<(num1>num2?num1:num2);i++){
+            if(num1%i==0 && num2%i==0){
+                denom=i;
+            }
+        }
+        return (int)(num1/denom)+"/"+(int)(num2/denom);
+    }
+    
+    
+    /*public static void main(String[] args) {
+        SchemeOperation so = new SchemeOperation(1,0,'/');
         System.out.println(so.getOperation());
         System.out.println(so.solve());
+        
+        SchemeOperation so2 = new SchemeOperation(0,0,'/');
+        System.out.println(so2.getOperation());
+        System.out.println(so2.solve());
         
         SchemeOperation so1 = new SchemeOperation(1.2,3);
         System.out.println(so1.getOperation());
         System.out.println(so1.solve());
-    }
+        
+        SchemeOperation so3 = new SchemeOperation(234,34,'/');
+        System.out.println(so3.getOperation());
+        System.out.println(so3.solve());
+        
+        SchemeOperation so4 = new SchemeOperation(2,4,'/');
+        System.out.println(so4.getOperation());
+        System.out.println(so4.solve());
+    }*/
     
     
 }
