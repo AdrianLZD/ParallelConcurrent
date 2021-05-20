@@ -8,17 +8,18 @@ public class Consumer extends Thread {
     Buffer buffer;
     int sleepTime;
     int ID;
+    boolean alive;
     
     Consumer(int ID, Buffer buffer, int sleepTime) {
         this.buffer = buffer;
         this.sleepTime = sleepTime;
         this.ID=ID;
-        
+        this.alive = true;
     }
     
     @Override
     public void run() {
-        while(GUIFrame.started){
+        while(this.alive){
             if(GUIFrame.running) {
                 this.buffer.consume(this.ID);
             }
@@ -28,6 +29,9 @@ public class Consumer extends Thread {
                 Logger.getLogger(Producer.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
+    }
+    
+    public void kill(){
+        this.alive = false;
     }
 }

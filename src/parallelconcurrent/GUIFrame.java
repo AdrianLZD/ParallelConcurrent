@@ -18,7 +18,7 @@ public class GUIFrame extends javax.swing.JFrame {
     private Producer[] producers;
     private Consumer[] consumers;
     private Buffer buffer;
-    public static boolean started;
+    private boolean started;
     int pSleepTime;
     int cSleepTime;
     int minValue;
@@ -299,10 +299,15 @@ public class GUIFrame extends javax.swing.JFrame {
     private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startButtonActionPerformed
         // TODO add your handling code here:
         
-        int pSize = 0;
-        int cSize = 0;
-        pSize = (int) this.producerSize.getValue();
-        cSize = (int) this.consumerSize.getValue();
+        int pSize = (int) this.producerSize.getValue();
+        int cSize = (int) this.consumerSize.getValue();   
+
+        pSleepTime = (int) this.producerSleepTime.getValue();
+        cSleepTime = (int) this.consumerSleepTime.getValue();
+        int bSize = (int) this.bufferSize.getValue();
+        minValue = (int) this.minNum.getValue();
+        maxValue = (int) this.maxNum.getValue();
+        
         if(pSize < 1){
             this.errorLabel.setText("Debe haber minimo un productor.");
             return;
@@ -312,16 +317,6 @@ public class GUIFrame extends javax.swing.JFrame {
             this.errorLabel.setText("Debe haber minimo un consumidor.");
             return;
         }
-
-        producers = new Producer[pSize];
-        consumers = new Consumer[cSize];
-
-
-        pSleepTime = (int) this.producerSleepTime.getValue();
-        cSleepTime = (int) this.consumerSleepTime.getValue();
-        int bSize = (int) this.bufferSize.getValue();
-        minValue = (int) this.minNum.getValue();
-        maxValue = (int) this.maxNum.getValue();
 
         if(pSleepTime < 0){
             this.errorLabel.setText("Los productores deben tener un tiempo de espera mayor o igual a 0.");
@@ -354,17 +349,27 @@ public class GUIFrame extends javax.swing.JFrame {
         }
             
         
-        if(GUIFrame.started) {
-            GUIFrame.running = false;
-            GUIFrame.started = false;
+        if(this.started) {
+            for (int i = 0; i < producers.length; i++) {
+                producers[i].kill();
+            }
+
+            for (int i = 0; i < consumers.length; i++) {
+                consumers[i].kill(); 
+            }
+            
             this.counter.setText("0");
             this.tabbedPane.setSelectedIndex(0);
             this.stopButton.setText("CONTINUAR");
             this.startButton.setText("INICIAR");
+            GUIFrame.running = false;
+            this.started = false;
             
         } else {
+            producers = new Producer[pSize];
+            consumers = new Consumer[cSize];
             GUIFrame.running = true;
-            GUIFrame.started = true;
+            this.started = true;
             this.errorLabel.setText("");
             this.progressBar.setMaximum(bSize);
             this.progressBar.setValue(0);
@@ -388,8 +393,8 @@ public class GUIFrame extends javax.swing.JFrame {
                 consumers[i].start();   
             }
             this.tabbedPane.setSelectedIndex(1);
-            this.stopButton.setText("PARAR");
-            this.startButton.setText("REINICIAR");
+            this.stopButton.setText("PAUSAR");
+            this.startButton.setText("DETENER");
         }
        
         
@@ -405,21 +410,14 @@ public class GUIFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_tabbedPaneMouseClicked
 
     private void stopButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stopButtonActionPerformed
-        
+        if(!this.started){
+            return;
+        }
         if(GUIFrame.running){
             GUIFrame.running = false;
             this.stopButton.setText("CONTINUAR");
         }else{
             GUIFrame.running = true;
-            /*for (int i = 0; i < producers.length; i++) {
-                producers[i] = new Producer(i+1, buffer, pSleepTime, minValue, maxValue);
-                producers[i].start();
-            }
-
-            for (int i = 0; i < consumers.length; i++) {
-                consumers[i] = new Consumer(i+1, buffer, cSleepTime);
-                consumers[i].start(); 
-            }*/
             this.stopButton.setText("PARAR");
         }
     }//GEN-LAST:event_stopButtonActionPerformed

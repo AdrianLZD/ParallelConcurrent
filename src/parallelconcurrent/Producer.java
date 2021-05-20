@@ -11,6 +11,7 @@ public class Producer extends Thread {
     int sleepTime;
     double minNum;
     double maxNum;
+    boolean alive;
     
     
     Producer(int ID,Buffer buffer, int sleepTime, double minNum, double maxNum) {
@@ -19,14 +20,14 @@ public class Producer extends Thread {
         this.sleepTime = sleepTime;
         this.minNum = minNum;
         this.maxNum = maxNum;
-        
+        this.alive = true;
     }
     
     @Override
     public void run() {
         Random r = new Random(System.currentTimeMillis());
         SchemeOperation product;
-        while(GUIFrame.started){
+        while(this.alive){
             if(GUIFrame.running) {
                 product = new SchemeOperation(Math.floor((r.nextDouble() * (maxNum - minNum) + minNum) * 100 ) / 100, Math.floor((r.nextDouble() * (maxNum - minNum) + minNum) * 100 )/ 100 );
                 this.buffer.produce(this.ID, product);
@@ -37,7 +38,10 @@ public class Producer extends Thread {
                 Logger.getLogger(Producer.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
+    }
+    
+    public void kill(){
+        this.alive = false;
     }
     
 }
