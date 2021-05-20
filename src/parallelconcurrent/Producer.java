@@ -26,16 +26,18 @@ public class Producer extends Thread {
     public void run() {
         Random r = new Random(System.currentTimeMillis());
         SchemeOperation product;
-        
-        while(GUIFrame.running) {
-            product = new SchemeOperation(Math.floor((r.nextDouble() * (maxNum - minNum) + minNum) * 100 ) / 100, Math.floor((r.nextDouble() * (maxNum - minNum) + minNum) * 100 )/ 100 );
-            this.buffer.produce(this.ID, product);
+        while(GUIFrame.started){
+            if(GUIFrame.running) {
+                product = new SchemeOperation(Math.floor((r.nextDouble() * (maxNum - minNum) + minNum) * 100 ) / 100, Math.floor((r.nextDouble() * (maxNum - minNum) + minNum) * 100 )/ 100 );
+                this.buffer.produce(this.ID, product);
+            }
             try {
                 Thread.sleep(this.sleepTime);
             } catch (InterruptedException ex) {
                 Logger.getLogger(Producer.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        
     }
     
 }

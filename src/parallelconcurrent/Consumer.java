@@ -18,13 +18,16 @@ public class Consumer extends Thread {
     
     @Override
     public void run() {
-        while(GUIFrame.running) {
-            this.buffer.consume(this.ID);
+        while(GUIFrame.started){
+            if(GUIFrame.running) {
+                this.buffer.consume(this.ID);
+            }
             try {
                 Thread.sleep(this.sleepTime);
             } catch (InterruptedException ex) {
                 Logger.getLogger(Producer.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        
     }
 }

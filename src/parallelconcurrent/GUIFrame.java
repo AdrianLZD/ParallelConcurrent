@@ -13,6 +13,16 @@ import javax.swing.table.DefaultTableModel;
  * @author sdegante
  */
 public class GUIFrame extends javax.swing.JFrame {
+    
+    
+    private Producer[] producers;
+    private Consumer[] consumers;
+    private Buffer buffer;
+    public static boolean started;
+    int pSleepTime;
+    int cSleepTime;
+    int minValue;
+    int maxValue;
 
     /**
      * Creates new form GUIFrame
@@ -30,15 +40,11 @@ public class GUIFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jTabbedPane1 = new javax.swing.JTabbedPane();
+        tabbedPane = new javax.swing.JTabbedPane();
         jPanel2 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
-        producerSleepTime = new javax.swing.JTextField();
-        consumerSleepTime = new javax.swing.JTextField();
-        bufferSize = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
-        minNum = new javax.swing.JTextField();
         maxNum = new javax.swing.JSpinner();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -46,6 +52,11 @@ public class GUIFrame extends javax.swing.JFrame {
         consumerSize = new javax.swing.JSpinner();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
+        errorLabel = new javax.swing.JLabel();
+        producerSleepTime = new javax.swing.JSpinner();
+        consumerSleepTime = new javax.swing.JSpinner();
+        bufferSize = new javax.swing.JSpinner();
+        minNum = new javax.swing.JSpinner();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         toDoList = new javax.swing.JTable();
@@ -55,18 +66,19 @@ public class GUIFrame extends javax.swing.JFrame {
         jLabel8 = new javax.swing.JLabel();
         progressBar = new javax.swing.JProgressBar();
         counter = new javax.swing.JTextField();
+        stopButton = new javax.swing.JButton();
         startButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
 
-        jLabel5.setText("Tiempo de Espera (ms)");
-
-        producerSleepTime.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                producerSleepTimeActionPerformed(evt);
+        tabbedPane.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tabbedPaneMouseClicked(evt);
             }
         });
+
+        jLabel5.setText("Tiempo de Espera (ms)");
 
         jLabel6.setText("Rango de Valores (n, m)");
 
@@ -77,6 +89,9 @@ public class GUIFrame extends javax.swing.JFrame {
         jLabel3.setText("Tamaño del Buffer");
 
         jLabel4.setText("Cantidad");
+
+        errorLabel.setForeground(new java.awt.Color(222, 0, 0));
+        errorLabel.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -93,17 +108,19 @@ public class GUIFrame extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(consumerSize)
-                    .addComponent(bufferSize)
                     .addComponent(producerSize)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(minNum, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 86, Short.MAX_VALUE)
+                    .addComponent(bufferSize)
+                    .addComponent(minNum))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(maxNum, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(producerSleepTime)
-                    .addComponent(consumerSleepTime)
-                    .addComponent(maxNum, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(427, Short.MAX_VALUE))
+                    .addComponent(consumerSleepTime))
+                .addGap(47, 47, 47)
+                .addComponent(errorLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 415, Short.MAX_VALUE)
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -122,17 +139,18 @@ public class GUIFrame extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(consumerSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(errorLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(consumerSleepTime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGap(20, 20, 20)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(bufferSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
-                    .addComponent(minNum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(maxNum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(260, Short.MAX_VALUE))
+                    .addComponent(maxNum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(minNum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(235, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -146,7 +164,7 @@ public class GUIFrame extends javax.swing.JFrame {
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab("Configuración", jPanel2);
+        tabbedPane.addTab("Configuración", jPanel2);
 
         toDoList.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -185,11 +203,20 @@ public class GUIFrame extends javax.swing.JFrame {
             }
         });
 
+        stopButton.setFont(new java.awt.Font("Courier New", 1, 24)); // NOI18N
+        stopButton.setForeground(new java.awt.Color(0, 102, 51));
+        stopButton.setText("PARAR");
+        stopButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                stopButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addContainerGap()
@@ -201,15 +228,18 @@ public class GUIFrame extends javax.swing.JFrame {
                         .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 67, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(stopButton, javax.swing.GroupLayout.PREFERRED_SIZE, 296, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
                         .addComponent(counter, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 378, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(74, 74, 74))))
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 378, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addContainerGap())
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                            .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(74, 74, 74)))))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -220,16 +250,18 @@ public class GUIFrame extends javax.swing.JFrame {
                     .addComponent(jLabel8))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 354, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 326, Short.MAX_VALUE)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(progressBar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(counter, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(counter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(stopButton, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab("Procesos", jPanel3);
+        tabbedPane.addTab("Procesos", jPanel3);
 
         startButton.setFont(new java.awt.Font("Courier New", 1, 24)); // NOI18N
         startButton.setForeground(new java.awt.Color(0, 102, 51));
@@ -247,7 +279,7 @@ public class GUIFrame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTabbedPane1)
+                    .addComponent(tabbedPane)
                     .addComponent(startButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -255,7 +287,7 @@ public class GUIFrame extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTabbedPane1)
+                .addComponent(tabbedPane)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(startButton, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -264,24 +296,76 @@ public class GUIFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void producerSleepTimeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_producerSleepTimeActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_producerSleepTimeActionPerformed
-
     private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startButtonActionPerformed
         // TODO add your handling code here:
-        GUIFrame.running = !GUIFrame.running;
-        int pSize = (int) this.producerSize.getValue();
-        int cSize = (int) this.consumerSize.getValue();
-        Producer[] producers = new Producer[pSize];
-        Consumer[] consumers = new Consumer[cSize];
         
-        if(GUIFrame.running) {
-            this.startButton.setText("PARAR");
-            int pSleepTime = Integer.parseInt(this.producerSleepTime.getText());
-            int cSleepTime = Integer.parseInt(this.consumerSleepTime.getText());
+        int pSize = 0;
+        int cSize = 0;
+        pSize = (int) this.producerSize.getValue();
+        cSize = (int) this.consumerSize.getValue();
+        if(pSize < 1){
+            this.errorLabel.setText("Debe haber minimo un productor.");
+            return;
+        }
 
-            int bSize = Integer.parseInt(this.bufferSize.getText());
+        if(cSize < 1){
+            this.errorLabel.setText("Debe haber minimo un consumidor.");
+            return;
+        }
+
+        producers = new Producer[pSize];
+        consumers = new Consumer[cSize];
+
+
+        pSleepTime = (int) this.producerSleepTime.getValue();
+        cSleepTime = (int) this.consumerSleepTime.getValue();
+        int bSize = (int) this.bufferSize.getValue();
+        minValue = (int) this.minNum.getValue();
+        maxValue = (int) this.maxNum.getValue();
+
+        if(pSleepTime < 0){
+            this.errorLabel.setText("Los productores deben tener un tiempo de espera mayor o igual a 0.");
+            return;
+        }
+
+        if(cSleepTime < 0){
+            this.errorLabel.setText("Los consumidores deben tener un tiempo de espera mayor o igual a 0.");
+            return;
+        }
+
+        if(bSize < 1){
+            this.errorLabel.setText("El tamaño del buffer debe ser mayor a 0.");
+            return;
+        }
+
+        if(minValue < 0 || minValue > 9){
+            this.errorLabel.setText("El valor minimo debe ser entre 0 y 9");
+            return;
+        }
+
+        if(maxValue < 0 || maxValue > 9){
+            this.errorLabel.setText("El valor máximo debe ser entre 0 y 9");
+            return;
+        }
+
+        if(minValue >= maxValue){
+            this.errorLabel.setText("El valor minimo debe ser menor al máximo.");
+            return;
+        }
+            
+        
+        if(GUIFrame.started) {
+            GUIFrame.running = false;
+            GUIFrame.started = false;
+            this.counter.setText("0");
+            this.tabbedPane.setSelectedIndex(0);
+            this.stopButton.setText("CONTINUAR");
+            this.startButton.setText("INICIAR");
+            
+        } else {
+            GUIFrame.running = true;
+            GUIFrame.started = true;
+            this.errorLabel.setText("");
             this.progressBar.setMaximum(bSize);
             this.progressBar.setValue(0);
 
@@ -291,11 +375,11 @@ public class GUIFrame extends javax.swing.JFrame {
             DefaultTableModel modelConsumer = new DefaultTableModel(new String[] { "Consumidor ID", "Operación", "Resultado"},0);
             this.doneList.setModel(modelConsumer);
 
-            Buffer buffer = new Buffer(bSize, modelProducer, modelConsumer, this.progressBar, this.counter);
+            buffer = new Buffer(bSize, modelProducer, modelConsumer, this.progressBar, this.counter);
             
 
             for (int i = 0; i < pSize; i++) {
-                producers[i] = new Producer(i+1, buffer, pSleepTime, Integer.parseInt(this.minNum.getText()), (int) this.maxNum.getValue());
+                producers[i] = new Producer(i+1, buffer, pSleepTime, minValue, maxValue);
                 producers[i].start();
             }
 
@@ -303,8 +387,9 @@ public class GUIFrame extends javax.swing.JFrame {
                 consumers[i] = new Consumer(i+1, buffer, cSleepTime);
                 consumers[i].start();   
             }
-        } else {
-            this.startButton.setText("INICIAR");
+            this.tabbedPane.setSelectedIndex(1);
+            this.stopButton.setText("PARAR");
+            this.startButton.setText("REINICIAR");
         }
        
         
@@ -314,6 +399,30 @@ public class GUIFrame extends javax.swing.JFrame {
     private void counterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_counterActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_counterActionPerformed
+
+    private void tabbedPaneMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabbedPaneMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tabbedPaneMouseClicked
+
+    private void stopButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stopButtonActionPerformed
+        
+        if(GUIFrame.running){
+            GUIFrame.running = false;
+            this.stopButton.setText("CONTINUAR");
+        }else{
+            GUIFrame.running = true;
+            /*for (int i = 0; i < producers.length; i++) {
+                producers[i] = new Producer(i+1, buffer, pSleepTime, minValue, maxValue);
+                producers[i].start();
+            }
+
+            for (int i = 0; i < consumers.length; i++) {
+                consumers[i] = new Consumer(i+1, buffer, cSleepTime);
+                consumers[i].start(); 
+            }*/
+            this.stopButton.setText("PARAR");
+        }
+    }//GEN-LAST:event_stopButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -352,11 +461,12 @@ public class GUIFrame extends javax.swing.JFrame {
 
     public static boolean running = false;
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField bufferSize;
+    private javax.swing.JSpinner bufferSize;
     private javax.swing.JSpinner consumerSize;
-    private javax.swing.JTextField consumerSleepTime;
+    private javax.swing.JSpinner consumerSleepTime;
     private javax.swing.JTextField counter;
     private javax.swing.JTable doneList;
+    private javax.swing.JLabel errorLabel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -370,13 +480,14 @@ public class GUIFrame extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JSpinner maxNum;
-    private javax.swing.JTextField minNum;
+    private javax.swing.JSpinner minNum;
     private javax.swing.JSpinner producerSize;
-    private javax.swing.JTextField producerSleepTime;
+    private javax.swing.JSpinner producerSleepTime;
     private javax.swing.JProgressBar progressBar;
     private javax.swing.JButton startButton;
+    private javax.swing.JButton stopButton;
+    private javax.swing.JTabbedPane tabbedPane;
     private javax.swing.JTable toDoList;
     // End of variables declaration//GEN-END:variables
 }
