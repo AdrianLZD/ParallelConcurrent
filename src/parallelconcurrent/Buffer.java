@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 
 public class Buffer {
     
-    private Queue<Character> buffer;
+    private Queue<SchemeOperation> buffer;
     private int size;
     
     Buffer(int size) {
@@ -17,22 +17,22 @@ public class Buffer {
         this.size = size;
     }
     
-    synchronized char consume() {
-        if(this.buffer.isEmpty()) {
+    synchronized String consume(){
+        while(this.buffer.isEmpty()) {
             try {
                 wait();
             } catch (InterruptedException ex) {
                 Logger.getLogger(Buffer.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        char product = this.buffer.poll();
-        notifyAll();
+        String product = this.buffer.poll().solve();
+        notify();
         
         return product;
     }
     
-    synchronized void produce(char product) {
-        if(this.buffer.size() >= this.size) {
+    synchronized void produce(SchemeOperation product) {
+        while(this.buffer.size() >= this.size) {
             try {
                 wait();
             } catch (InterruptedException ex) {
@@ -40,7 +40,7 @@ public class Buffer {
             }
         }
         this.buffer.add(product);
-        notifyAll();
+        notify();
     }
     
     static int count = 1;

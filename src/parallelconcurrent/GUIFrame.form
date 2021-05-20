@@ -94,14 +94,14 @@
                               <Component id="bufferSize" max="32767" attributes="0"/>
                               <Component id="producerSize" max="32767" attributes="0"/>
                               <Component id="jLabel4" max="32767" attributes="0"/>
-                              <Component id="jTextField4" min="-2" pref="86" max="-2" attributes="0"/>
+                              <Component id="minNum" min="-2" pref="86" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
                               <Component id="jLabel5" max="32767" attributes="0"/>
                               <Component id="producerSleepTime" alignment="0" max="32767" attributes="0"/>
                               <Component id="consumerSleepTime" alignment="0" max="32767" attributes="0"/>
-                              <Component id="jSpinner3" min="-2" pref="109" max="-2" attributes="0"/>
+                              <Component id="maxNum" min="-2" pref="109" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace pref="52" max="32767" attributes="0"/>
                       </Group>
@@ -137,8 +137,8 @@
                           <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="jLabel6" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jTextField4" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jSpinner3" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="minNum" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="maxNum" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace pref="42" max="32767" attributes="0"/>
                       </Group>
@@ -165,9 +165,9 @@
                     <Property name="text" type="java.lang.String" value="Rango de Valores (n, m)"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JTextField" name="jTextField4">
+                <Component class="javax.swing.JTextField" name="minNum">
                 </Component>
-                <Component class="javax.swing.JSpinner" name="jSpinner3">
+                <Component class="javax.swing.JSpinner" name="maxNum">
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel1">
                   <Properties>
