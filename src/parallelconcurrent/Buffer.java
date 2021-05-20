@@ -1,23 +1,27 @@
 
 package parallelconcurrent;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.table.DefaultTableModel;
 
 public class Buffer {
     
     private Queue<SchemeOperation> buffer;
     private int size;
+    private DefaultTableModel modelProducer;
+    private DefaultTableModel modelConsumer;
     
-    Buffer(int size) {
+    Buffer(int size, DefaultTableModel modelProducer, DefaultTableModel modelConsumer) {
         this.buffer = new LinkedList<>();
         this.size = size;
+        this.modelConsumer=modelConsumer;
+        this.modelProducer=modelProducer;
     }
     
-    synchronized String consume(){
+    synchronized SchemeOperation consume(){
         while(this.buffer.isEmpty()) {
             try {
                 wait();
@@ -25,7 +29,9 @@ public class Buffer {
                 Logger.getLogger(Buffer.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        String product = this.buffer.poll().solve();
+        SchemeOperation product = this.buffer.poll();
+        this.modelConsumer.addRow(new Object[]{ "C: ", product.getOperation(), product.solve() });
+        this.modelProducer.removeRow(0);
         notify();
         
         return product;
@@ -40,6 +46,7 @@ public class Buffer {
             }
         }
         this.buffer.add(product);
+        this.modelProducer.addRow(new Object[]{ "P: ", product.getOperation()});
         notify();
     }
     
