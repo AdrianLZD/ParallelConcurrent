@@ -5,6 +5,8 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JProgressBar;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 public class Buffer {
@@ -13,15 +15,19 @@ public class Buffer {
     private int size;
     private DefaultTableModel modelProducer;
     private DefaultTableModel modelConsumer;
+    private JProgressBar progressBar;
+    private JTextField counter;
     
-    Buffer(int size, DefaultTableModel modelProducer, DefaultTableModel modelConsumer) {
+    Buffer(int size, DefaultTableModel modelProducer, DefaultTableModel modelConsumer, JProgressBar progressBar, JTextField counter) {
         this.buffer = new LinkedList<>();
         this.size = size;
         this.modelConsumer=modelConsumer;
         this.modelProducer=modelProducer;
+        this.progressBar = progressBar;
+        this.counter = counter;
     }
     
-    synchronized SchemeOperation consume(){
+    synchronized SchemeOperation consume(int id){
         while(this.buffer.isEmpty()) {
             try {
                 wait();
@@ -30,14 +36,17 @@ public class Buffer {
             }
         }
         SchemeOperation product = this.buffer.poll();
-        this.modelConsumer.addRow(new Object[]{ "C: ", product.getOperation(), product.solve() });
+        this.progressBar.setValue(this.buffer.size());
+        int nextCount = Integer.parseInt(this.counter.getText())+1;
+        this.counter.setText(Integer.toString(nextCount));
+        this.modelConsumer.addRow(new Object[]{ "C: "+id, product.getOperation(), product.solve() });
         this.modelProducer.removeRow(0);
         notify();
         
         return product;
     }
     
-    synchronized void produce(SchemeOperation product) {
+    synchronized void produce(int id, SchemeOperation product) {
         while(this.buffer.size() >= this.size) {
             try {
                 wait();
@@ -46,14 +55,8 @@ public class Buffer {
             }
         }
         this.buffer.add(product);
-        this.modelProducer.addRow(new Object[]{ "P: ", product.getOperation()});
+        this.progressBar.setValue(this.buffer.size());
+        this.modelProducer.addRow(new Object[]{ "P: "+id, product.getOperation()});
         notify();
     }
-    
-    static int count = 1;
-    synchronized static void print(String string) {
-        System.out.print(count++ + " ");
-        System.out.println(string);
-    }
-    
 }

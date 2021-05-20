@@ -4,7 +4,6 @@ package parallelconcurrent;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.table.DefaultTableModel;
 
 public class Producer extends Thread {
     int ID;
@@ -25,17 +24,12 @@ public class Producer extends Thread {
     
     @Override
     public void run() {
-        System.out.println("Running Producer...");
-        
         Random r = new Random(System.currentTimeMillis());
         SchemeOperation product;
         
-        while(true) {
+        while(GUIFrame.running) {
             product = new SchemeOperation(Math.floor((r.nextDouble() * (maxNum - minNum) + minNum) * 100 ) / 100, Math.floor((r.nextDouble() * (maxNum - minNum) + minNum) * 100 )/ 100 );
-            this.buffer.produce(product);
-            //System.out.println("Producer produced: " + product);
-            
-            
+            this.buffer.produce(this.ID, product);
             try {
                 Thread.sleep(this.sleepTime);
             } catch (InterruptedException ex) {

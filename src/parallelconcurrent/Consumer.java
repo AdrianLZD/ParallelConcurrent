@@ -3,7 +3,6 @@ package parallelconcurrent;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.table.DefaultTableModel;
 
 public class Consumer extends Thread {
     Buffer buffer;
@@ -19,14 +18,8 @@ public class Consumer extends Thread {
     
     @Override
     public void run() {
-        System.out.println("Running Consumer...");
-        SchemeOperation product;
-        
-        while(true) {
-            product = this.buffer.consume();
-            //System.out.println("Consumer consumed: " + product);
-            
-            
+        while(GUIFrame.running) {
+            this.buffer.consume(this.ID);
             try {
                 Thread.sleep(this.sleepTime);
             } catch (InterruptedException ex) {
