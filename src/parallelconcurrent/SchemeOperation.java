@@ -65,6 +65,7 @@ public class SchemeOperation {
     
     private static String toFraction(double num1, double num2){//Gets the division in the smallest fraction
         if(num2==0) return "Exception in /";
+        if(num1%1!=0 || num2%1!=0) return String.valueOf((num1/num2));
         double denom=0;
         for(int i=0; i<(num1>num2?num1:num2);i++){
             if(num1%i==0 && num2%i==0){
@@ -75,7 +76,7 @@ public class SchemeOperation {
     }
     
     
-    /*public static void main(String[] args) {
+    public static void main(String[] args) {
         SchemeOperation so = new SchemeOperation(1,0,'/');
         System.out.println(so.getOperation());
         System.out.println(so.solve());
@@ -95,7 +96,11 @@ public class SchemeOperation {
         SchemeOperation so4 = new SchemeOperation(2,4,'/');
         System.out.println(so4.getOperation());
         System.out.println(so4.solve());
-    }*/
+        
+        SchemeOperation so5 = new SchemeOperation(5,2.2,'/');
+        System.out.println(so5.getOperation());
+        System.out.println(so5.solve());
+    }
     
     
 }
