@@ -5,8 +5,8 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JLabel;
 import javax.swing.JProgressBar;
-import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 public class Buffer {
@@ -16,9 +16,9 @@ public class Buffer {
     private DefaultTableModel modelProducer;
     private DefaultTableModel modelConsumer;
     private JProgressBar progressBar;
-    private JTextField counter;
+    private JLabel counter;
     
-    Buffer(int size, DefaultTableModel modelProducer, DefaultTableModel modelConsumer, JProgressBar progressBar, JTextField counter) {
+    Buffer(int size, DefaultTableModel modelProducer, DefaultTableModel modelConsumer, JProgressBar progressBar, JLabel counter) {
         this.buffer = new LinkedList<>();
         this.size = size;
         this.modelConsumer=modelConsumer;
