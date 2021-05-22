@@ -1,5 +1,6 @@
 package parallelconcurrent;
 
+import java.util.Random;
 import javax.swing.table.DefaultTableModel;
 
 /*
@@ -23,6 +24,7 @@ public class GUIFrame extends javax.swing.JFrame {
     int cSleepTime;
     int minValue;
     int maxValue;
+    boolean negativeValues;
 
     /**
      * Creates new form GUIFrame
@@ -61,6 +63,7 @@ public class GUIFrame extends javax.swing.JFrame {
         jLabel12 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
+        negativeCheck = new javax.swing.JCheckBox();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         toDoList = new javax.swing.JTable();
@@ -139,6 +142,13 @@ public class GUIFrame extends javax.swing.JFrame {
         jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel14.setText("Cantidad");
 
+        negativeCheck.setText(" Usar numeros negativos");
+        negativeCheck.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                negativeCheckActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -179,8 +189,11 @@ public class GUIFrame extends javax.swing.JFrame {
                         .addGap(101, 101, 101))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(errorLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 755, Short.MAX_VALUE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(negativeCheck, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(errorLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, 755, Short.MAX_VALUE))
                         .addContainerGap())))
         );
         jPanel1Layout.setVerticalGroup(
@@ -206,7 +219,7 @@ public class GUIFrame extends javax.swing.JFrame {
                         .addComponent(producerSleepTime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(consumerSleepTime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
                 .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -223,7 +236,9 @@ public class GUIFrame extends javax.swing.JFrame {
                         .addComponent(minNum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(maxNum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(30, 30, 30)
-                .addComponent(errorLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(errorLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(negativeCheck, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -398,6 +413,7 @@ public class GUIFrame extends javax.swing.JFrame {
         int bSize = (int) this.bufferSize.getValue();
         minValue = (int) this.minNum.getValue();
         maxValue = (int) this.maxNum.getValue();
+        this.negativeValues = false;
         
         if(pSize < 1){
             this.errorLabel.setText("Debe haber minimo un productor.");
@@ -423,16 +439,20 @@ public class GUIFrame extends javax.swing.JFrame {
             this.errorLabel.setText("El tamaño del buffer debe ser mayor a 0.");
             return;
         }
-
-        if(minValue < 0 || minValue > 9){
+        
+        if(!negativeCheck.isSelected()){
+            if(minValue < 0 || minValue > 9){
             this.errorLabel.setText("El valor minimo debe ser entre 0 y 9");
             return;
-        }
+            }
 
-        if(maxValue < 0 || maxValue > 9){
+            if(maxValue < 0 || maxValue > 9){
             this.errorLabel.setText("El valor máximo debe ser entre 0 y 9");
             return;
+            }
         }
+
+        
 
         if(minValue >= maxValue){
             this.errorLabel.setText("El valor minimo debe ser menor al máximo.");
@@ -474,10 +494,15 @@ public class GUIFrame extends javax.swing.JFrame {
             this.doneList.setModel(modelConsumer);
 
             buffer = new Buffer(bSize, modelProducer, modelConsumer, this.progressBar, this.counter);
-            
+            Random r = new Random(System.currentTimeMillis());
 
             for (int i = 0; i < pSize; i++) {
-                producers[i] = new Producer(i+1, buffer, pSleepTime, minValue, maxValue);
+                if (negativeCheck.isSelected()){
+                    producers[i] = new Producer(i+1, buffer, pSleepTime, minValue, maxValue, r, 2);
+                }else{
+                    producers[i] = new Producer(i+1, buffer, pSleepTime, minValue, maxValue, r, 1);
+                }
+                
                 producers[i].start();
             }
 
@@ -514,6 +539,10 @@ public class GUIFrame extends javax.swing.JFrame {
             this.stopButton.setBackground(new java.awt.Color(255,204,153));
         }
     }//GEN-LAST:event_stopButtonActionPerformed
+
+    private void negativeCheckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_negativeCheckActionPerformed
+
+    }//GEN-LAST:event_negativeCheckActionPerformed
 
     /**
      * @param args the command line arguments
@@ -579,6 +608,7 @@ public class GUIFrame extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSpinner maxNum;
     private javax.swing.JSpinner minNum;
+    private javax.swing.JCheckBox negativeCheck;
     private javax.swing.JSpinner producerSize;
     private javax.swing.JSpinner producerSleepTime;
     private javax.swing.JProgressBar progressBar;

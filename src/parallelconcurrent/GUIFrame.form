@@ -89,7 +89,7 @@
                       <Group type="102" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" alignment="0" attributes="0">
+                              <Group type="102" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Group type="103" groupAlignment="0" attributes="0">
                                           <Group type="102" alignment="0" attributes="0">
@@ -130,10 +130,14 @@
                                   </Group>
                                   <EmptySpace min="-2" pref="101" max="-2" attributes="0"/>
                               </Group>
-                              <Group type="102" alignment="0" attributes="0">
+                              <Group type="102" attributes="0">
                                   <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                      <Component id="errorLabel" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="jLabel11" alignment="0" pref="755" max="32767" attributes="0"/>
+                                      <Group type="102" attributes="0">
+                                          <Component id="negativeCheck" min="-2" pref="188" max="-2" attributes="0"/>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Component id="errorLabel" max="32767" attributes="0"/>
+                                      </Group>
+                                      <Component id="jLabel11" pref="755" max="32767" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                               </Group>
@@ -168,7 +172,7 @@
                                   <Component id="consumerSleepTime" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
-                          <EmptySpace pref="32" max="32767" attributes="0"/>
+                          <EmptySpace pref="37" max="32767" attributes="0"/>
                           <Component id="jLabel14" min="-2" pref="30" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
@@ -189,7 +193,10 @@
                               <Component id="maxNum" alignment="1" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
-                          <Component id="errorLabel" min="-2" pref="47" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="errorLabel" min="-2" pref="47" max="-2" attributes="0"/>
+                              <Component id="negativeCheck" min="-2" pref="34" max="-2" attributes="0"/>
+                          </Group>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -341,6 +348,14 @@
                     <Property name="horizontalAlignment" type="int" value="0"/>
                     <Property name="text" type="java.lang.String" value="Cantidad"/>
                   </Properties>
+                </Component>
+                <Component class="javax.swing.JCheckBox" name="negativeCheck">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value=" Usar numeros negativos"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="negativeCheckActionPerformed"/>
+                  </Events>
                 </Component>
               </SubComponents>
             </Container>
