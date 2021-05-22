@@ -29,14 +29,19 @@ public class SchemeOperation {
         this.num1=num1;
         this.num2=num2;
         Random rand = new Random();
-        char[] ops = {'+','-','/','*'};
-        this.op=ops[rand.nextInt(4)];
+        char[] ops = {'+','-','/','*','^'};
+        this.op=ops[rand.nextInt(5)];
     }
     
     public String getOperation(){//Returns the operation in the current format
         String n1= num1%1==0 ? String.valueOf((int)num1) : df2.format(num1);
         String n2= num2%1==0 ? String.valueOf((int)num2) : df2.format(num2);
-        return "("+this.op+" "+n1+" "+n2+")";
+        if (this.op == '^'){
+            return "(expt "+n1+" "+n2+")";
+        }else{
+            return "("+this.op+" "+n1+" "+n2+")";
+        }
+        
     }
     
     public String solve(){//Solves the operation based on the operator sign used
@@ -59,6 +64,10 @@ public class SchemeOperation {
         case '/':
           // Divide
           return this.toFraction(num1,num2);
+        case '^':
+          //Exponent
+          res=Math.pow(num1, num2);
+          break;
         default:
           throw new Error("The operator char used is not handled");
         }
