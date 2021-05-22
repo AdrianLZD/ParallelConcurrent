@@ -89,6 +89,10 @@ public class SchemeOperation {
     private static String toFraction(double num1, double num2){//Gets the division in the smallest fraction
         if(num2==0) return "Exception in /";
         if(num1%1!=0 || num2%1!=0) return df2.format((num1/num2));
+        if(num2==1) return String.valueOf((int)num1);
+        if(num1==0) return "0";
+        if(num2==-1) return String.valueOf((int) (num1 * -1));
+        if(num1 < 0 && num2 < 0) return (int) Math.abs(num1) + "/" + (int) Math.abs(num2);
         double denom=0;
         for(int i=0; i<(num1>num2?num1:num2);i++){
             if(num1%i==0 && num2%i==0){
@@ -97,17 +101,6 @@ public class SchemeOperation {
         }
         return (int)(num1/denom)+"/"+(int)(num2/denom);
     }
-    
-    private double checkSquareRoot(double x, double y){
-        if (y < 0){
-            return Math.pow(x, y+1)/x;
-        }else if (y == 0){
-            return 1;
-        }else{
-            return x*(Math.pow(x, y-1));
-        }
-            
-    }   
     
     public static void main(String[] args) {
         

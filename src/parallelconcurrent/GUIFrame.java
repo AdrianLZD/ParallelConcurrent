@@ -64,6 +64,7 @@ public class GUIFrame extends javax.swing.JFrame {
         jLabel13 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
         negativeCheck = new javax.swing.JCheckBox();
+        wholeCheck = new javax.swing.JCheckBox();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         toDoList = new javax.swing.JTable();
@@ -142,10 +143,17 @@ public class GUIFrame extends javax.swing.JFrame {
         jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel14.setText("Cantidad");
 
-        negativeCheck.setText(" Usar numeros negativos");
+        negativeCheck.setText(" Usar números negativos");
         negativeCheck.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 negativeCheckActionPerformed(evt);
+            }
+        });
+
+        wholeCheck.setText("Usar números enteros");
+        wholeCheck.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                wholeCheckActionPerformed(evt);
             }
         });
 
@@ -179,7 +187,7 @@ public class GUIFrame extends javax.swing.JFrame {
                                 .addGap(217, 217, 217)
                                 .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(37, 38, Short.MAX_VALUE)
+                        .addGap(37, 39, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
                             .addComponent(producerSleepTime)
@@ -191,6 +199,8 @@ public class GUIFrame extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(negativeCheck, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(wholeCheck)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(errorLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, 755, Short.MAX_VALUE))
@@ -238,7 +248,9 @@ public class GUIFrame extends javax.swing.JFrame {
                 .addGap(30, 30, 30)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(errorLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(negativeCheck, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(negativeCheck, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(wholeCheck)))
                 .addContainerGap())
         );
 
@@ -453,7 +465,6 @@ public class GUIFrame extends javax.swing.JFrame {
         }
 
         
-
         if(minValue >= maxValue){
             this.errorLabel.setText("El valor minimo debe ser menor al máximo.");
             return;
@@ -497,10 +508,16 @@ public class GUIFrame extends javax.swing.JFrame {
             Random r = new Random(System.currentTimeMillis());
 
             for (int i = 0; i < pSize; i++) {
-                if (negativeCheck.isSelected()){
-                    producers[i] = new Producer(i+1, buffer, pSleepTime, minValue, maxValue, r, 2);
+                if(wholeCheck.isSelected()){
+                    if (negativeCheck.isSelected()){
+                        producers[i] = new Producer(i+1, buffer, pSleepTime, minValue, maxValue, r, 2, 2);
+                    }else{
+                        producers[i] = new Producer(i+1, buffer, pSleepTime, minValue, maxValue, r, 1, 2);
+                    }
+                }else if (negativeCheck.isSelected()){
+                    producers[i] = new Producer(i+1, buffer, pSleepTime, minValue, maxValue, r, 2, 1);
                 }else{
-                    producers[i] = new Producer(i+1, buffer, pSleepTime, minValue, maxValue, r, 1);
+                    producers[i] = new Producer(i+1, buffer, pSleepTime, minValue, maxValue, r, 1, 1);
                 }
                 
                 producers[i].start();
@@ -543,6 +560,10 @@ public class GUIFrame extends javax.swing.JFrame {
     private void negativeCheckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_negativeCheckActionPerformed
 
     }//GEN-LAST:event_negativeCheckActionPerformed
+
+    private void wholeCheckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_wholeCheckActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_wholeCheckActionPerformed
 
     /**
      * @param args the command line arguments
@@ -616,5 +637,6 @@ public class GUIFrame extends javax.swing.JFrame {
     private javax.swing.JButton stopButton;
     private javax.swing.JTabbedPane tabbedPane;
     private javax.swing.JTable toDoList;
+    private javax.swing.JCheckBox wholeCheck;
     // End of variables declaration//GEN-END:variables
 }
